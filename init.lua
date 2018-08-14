@@ -35,7 +35,7 @@ else
 end
 
 minetest.register_on_dieplayer(function(player)
-	local pos=player:getpos()
+	local pos=player:get_pos()
 	pos={x=pos.x,y=pos.y+1.5,z=pos.z}
 	local def=minetest.registered_nodes[minetest.get_node(pos).name]
 	if def and def.buildable_to then
@@ -59,10 +59,10 @@ afterearth.weather=function(d)
 -- intensively sunshine between 11:00 and 14:00
 	if d>0.458 and d<0.58 then
 		for _,player in ipairs(minetest.get_connected_players()) do
-			local pos=player:getpos()
+			local pos=player:get_pos()
 			local l=minetest.get_node_light(pos)
 			for i, ob in pairs(minetest.get_objects_inside_radius(pos, 30)) do
-				local pos2=ob:getpos()
+				local pos2=ob:get_pos()
 				local l=minetest.get_node_light(pos2)
 				if l and l>=default.LIGHT_MAX then
 					local n=minetest.registered_nodes[minetest.get_node(pos2).name]
@@ -104,13 +104,13 @@ afterearth.weather=function(d)
 		local max=afterearth.storm.max
 		local min=afterearth.storm.min
 		for _,player in ipairs(minetest.get_connected_players()) do
-			local pos=player:getpos()
+			local pos=player:get_pos()
 			local l=minetest.get_node_light(pos)
 			if l and l>=default.LIGHT_MAX-1 then
 				afterearth.new_dust=1
 				local e=minetest.add_entity({x=pos.x+math.random(min.x,max.x),y=pos.y+math.random(1,10), z=pos.z+math.random(min.z,max.z)}, "afterearth:duster")
-				e:setvelocity({x=afterearth.storm.dir.x*5, y=-2, z=afterearth.storm.dir.z*5})
-				e:setacceleration({x=afterearth.storm.dir.x*5, y=-2, z=afterearth.storm.dir.z*5})
+				e:set_velocity({x=afterearth.storm.dir.x*5, y=-2, z=afterearth.storm.dir.z*5})
+				e:set_acceleration({x=afterearth.storm.dir.x*5, y=-2, z=afterearth.storm.dir.z*5})
 				afterearth.new_dust=nil
 				local pos3={x=pos.x+max.x, y=pos.y+5, z=pos.z+max.z}
 				minetest.add_particlespawner({
@@ -131,11 +131,11 @@ afterearth.weather=function(d)
 				})
 				afterearth.new_dust=1
 				for i, ob in pairs(minetest.get_objects_inside_radius(pos, 20)) do
-					if ob:get_luaentity() and not ob:get_luaentity().dust and afterearth.visiable(ob:getpos(),pos3) then
+					if ob:get_luaentity() and not ob:get_luaentity().dust and afterearth.visiable(ob:get_pos(),pos3) then
 						if ob:get_luaentity().itemstring then
 							ob:get_luaentity().age=afterearth.item_age
 						end
-						minetest.add_entity(ob:getpos(), "afterearth:duster")
+						minetest.add_entity(ob:get_pos(), "afterearth:duster")
 					end
 				end
 				afterearth.new_dust=nil

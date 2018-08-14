@@ -189,7 +189,7 @@ after_place_node = function(pos, placer, itemstack, pointed_thing)
 		"listring[current_name;main]")
 end,
 on_use=function(itemstack, user, pointed_thing)
-	local pos=user:getpos()
+	local pos=user:get_pos()
 	pos.y=pos.y+1.5
 	local def=minetest.registered_nodes[minetest.get_node(pos).name]
 	if def and def.drowning==0 then
@@ -496,8 +496,8 @@ afterearth.spawn_dust=function(pos)
 		tx[6]=tt.t3
 	afterearth.new_dust={t=tx,drop=drop}
 	local e=minetest.add_entity(pos, "afterearth:dust")
-	e:setvelocity({x=afterearth.storm.dir.x*5, y=2, z=afterearth.storm.dir.z*5})
-	e:setacceleration({x=afterearth.storm.dir.x*5, y=-1, z=afterearth.storm.dir.z*5})
+	e:set_velocity({x=afterearth.storm.dir.x*5, y=2, z=afterearth.storm.dir.z*5})
+	e:set_acceleration({x=afterearth.storm.dir.x*5, y=-1, z=afterearth.storm.dir.z*5})
 	afterearth.new_dust=nil
 	minetest.remove_node(pos)
 end
@@ -528,7 +528,7 @@ minetest.register_entity("afterearth:duster",{
 		self.time2=self.time2+dtime
 		if self.time2<0.1 then return self end
 		self.time2=0
-		local pos=self.object:getpos()
+		local pos=self.object:get_pos()
 		local pos2={x=pos.x+self.d.x,y=pos.y,z=pos.z+self.d.z}
 		local u=minetest.registered_nodes[minetest.get_node(pos2).name]
 		if not self.atta and u and u.walkable and minetest.get_item_group(u.name,"cracky")==0 and not minetest.is_protected(pos2,"") then
@@ -537,7 +537,7 @@ minetest.register_entity("afterearth:duster",{
 		elseif self.time>3 or u and u.walkable then
 			self.object:remove()
 		elseif self.atta then
-			local v=self.object:getvelocity()
+			local v=self.object:get_velocity()
 			local pos2={x=pos.x+self.d.x,y=pos.y-1,z=pos.z+self.d.z}
 			local u2=minetest.registered_nodes[minetest.get_node(pos2).name]
 			if (u2 and u2.walkable) or (v.x+v.z==0) then
@@ -548,13 +548,13 @@ minetest.register_entity("afterearth:duster",{
 		elseif not self.atta then
 			for i, ob in pairs(minetest.get_objects_inside_radius(pos, 1)) do
 				if not (ob:get_luaentity() and ob:get_luaentity().dust) then
-					self.object:moveto({x=pos.x,y=pos.y+1,z=pos.z})
+					self.object:move_to({x=pos.x,y=pos.y+1,z=pos.z})
 					self.object:set_properties({collisionbox={-0.5,-0.5,-0.5,0.5,0.5,0.5}})
 					ob:set_attach(self.object, "",{x = 0, y = 0, z = 0}, {x = 0, y =0, z = 0})
 					self.atta=ob
 					self.time=-30
-					self.object:setvelocity({x=self.d.x*15, y=1, z=self.d.z*15})
-					self.object:setacceleration({x=0, y=-0.2, z=0})
+					self.object:set_velocity({x=self.d.x*15, y=1, z=self.d.z*15})
+					self.object:set_acceleration({x=0, y=-0.2, z=0})
 					return self
 				end
 			end
@@ -582,7 +582,7 @@ minetest.register_entity("afterearth:dust",{
 	is_visible = true,
 	makes_footstep_sound = true,
 	on_punch2=function(self)
-		minetest.add_item(self.object:getpos(),self.drop)
+		minetest.add_item(self.object:get_pos(),self.drop)
 		self.object:remove()
 		return self
 	end,
@@ -598,7 +598,7 @@ minetest.register_entity("afterearth:dust",{
 		if self.time<self.timer then return self end
 		self.time=0
 		self.timer2=self.timer2-1
-		local pos=self.object:getpos()
+		local pos=self.object:get_pos()
 		local u=minetest.registered_nodes[minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name]
 		for i, ob in pairs(minetest.get_objects_inside_radius({x=pos.x+self.d.x,y=pos.y-1,z=pos.z+self.d.z}, 2)) do
 			if not (ob:get_luaentity() and ob:get_luaentity().dust) then
