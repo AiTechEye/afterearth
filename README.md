@@ -1,6 +1,7 @@
 # afterearth
 
-License: CC0
+Licenses: code: LGPL-2.1, media: CC BY-SA-4.0
+
 Version: 2r
 
 The earth's ecosystem has collapsed, and there ain't no biologically environment left.
