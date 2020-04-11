@@ -2,7 +2,7 @@
 
 minetest.after(0, function()
 for v, s in pairs(core.registered_items) do
-	if not (s.groups and s.groups.not_in_creative_inventory==1) and not afterearth.not_in_trash[v] then
+	if s.groups and s.groups.not_in_creative_inventory ~=1 and not afterearth.not_in_trash[v] then
 		local c=minetest.get_craft_recipe(v)
 		if c.items  then
 			table.insert(afterearth.trashdrops,v)
@@ -11,6 +11,7 @@ for v, s in pairs(core.registered_items) do
 		end
 	end
 end
+
 afterearth.trashdropscount=math.floor(#afterearth.trashdrops/4)
 end)
 
